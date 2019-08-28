@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="jquery-1.12.4.js"></script>
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+
+    }
+    .view {
+      height: 300px;  /*设置视窗的高*/
+      width: 560px;
+      margin: 200px auto;
+      position: relative;
+    }
+    ul {
+      width: 100%;
+      height: 100%;
+     /* transform: rotate3d(1,1,1,-30deg);*/
+      transform-style: preserve-3d;  /*保存3d样式*/
+      transform-origin: left bottom;
+    }
+    ul>li {
+      width: 20%;
+      height: 100%;
+      list-style: none;
+      /*background-color: #20ff3e;*/
+      float: left;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s;
+    }
+    ul>li>span {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    ul>li>span:nth-of-type(1) {                 /*每个li的第一个面*/
+      background-image: url("images/q1.jpg");   /*所有的都在中心叠放*/
+      transform: translateZ(150px);
+    }
+    ul>li>span:nth-of-type(2) {                 /*每个li的第二个面*/
+      background-image: url("images/q2.jpg");
+      transform: translateY(-150px) rotateX(90deg);
+    }
+    ul>li>span:nth-of-type(3) {
+      background-image: url("images/q3.jpg");
+      transform: translateZ(-150px) rotateX(180deg);
+    }
+    ul>li>span:nth-of-type(4) {
+      background-image: url("images/q4.jpg");
+      transform: translateY(150px) rotateX(-90deg);
+    }
+    ul>li:nth-of-type(2)>span { /*第二个li的所有背景偏移*/
+      background-position: -100%; /*走父级元素li的100%*/
+    }
+    ul>li:nth-of-type(3)>span { /*第3个li的所有背景偏移*/
+      background-position: -200%; /*走父级元素li的100%*/
+    }
+    ul>li:nth-of-type(4)>span { /*第4个li的所有背景偏移*/
+      background-position: -300%; /*走父级元素li的100%*/
+    }
+    ul>li:nth-of-type(5)>span { /*第二个li的所有背景偏移*/
+      background-position: -400%; /*走父级元素li的100%*/
+    }
+    .left,.right {
+      position:absolute;
+      font-size: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(44, 44, 44, 0.8);
+      text-decoration: none;
+      color: #FFFFFF;
+    }
+    .left {
+      left: 0;
+    }
+    .right {
+      right: 0;
+
+    }
+
+  </style>
+</head>
+<body>
+<div class="view">
+  <ul>
+    <li>              <!--每个li是一个侧切块，每个span是这个块的5个面-->
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </li>
+    <li>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </li>
+    <li>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </li>
+    <li>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </li>
+    <li>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </li>
+  </ul>
+  <a href="#" class="left"><</a>
+  <a href="#" class="right">></a>
+</div>
+<script>
+  $(function () {
+    var i=0
+    var flag=true;  //添加节流阀
+    $(".right").on("click",function () {
+      /*就是将所有的li围绕x转90度*/
+      if (flag==true){
+        flag=false;
+        i--;
+        $("li").each(function (index,ele) {
+          $(this).css({"transform":"rotateX("+i*90+"deg)","transition-delay":(index*0.2)+"s"})
+        })
+
+        setTimeout(function () {
+          flag=true;              //在if里面变为true，就是执行完里面动作之后
+        },1000);
+      }
+
+
+    })
+
+    $(".left").on("click",function () {
+      /*就是将所有的li围绕x转90度*/
+      if (flag==true) {
+        flag=false;
+        i++;
+        $("li").each(function (index,ele) {
+          $(this).css({"transform":"rotateX("+i*90+"deg)","transition-delay":(index*0.2)+"s"})
+        })
+
+        setTimeout(function () {
+          flag=true;              //在if里面变为true，就是执行完里面动作之后
+        },1000);
+      }
+
+
+    })
+// var id=setInterval(function () {
+//   $(".left").trigger("click")  //设置定时器自动触发
+// },1000)
+
+var timeid=setInterval(function () {
+  document.querySelector(".left").click()
+},1000)
+document.querySelector(".view").onmouseover=function () {
+  clearInterval(timeid);
+  console.log("ni")
+}
+
+/*
+    document.querySelector(".view").onmouseout=function () {
+      timeid=setInterval(function () {
+        document.querySelector(".left").click()  //重订定时器
+      },1000)
+    }*/
+$(".view").mouseout(function () {
+    timeid=setInterval(function () {
+      /*document.querySelector(".left").click() */ //重订定时器
+      $(".left").trigger("click")
+    },1000)
+})
+  })
+
+
+</script>
+</body>
+</html>
